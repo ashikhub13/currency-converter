@@ -51,14 +51,14 @@ public class IPLookupUtilTest {
 		assertEquals("DE", IPLookupUtil.findCountryFromIP(restTemplate, "85.214.132.117", iplocationUrl));
 	}
 
-	@Test
-	void findIP2() {
-		String findMyIpUrl = "https://api.my-ip.io/ip";
-		Mockito.when(restTemplate.getForEntity(findMyIpUrl, String.class))
-		.thenReturn(new ResponseEntity<String>("85.214.132.117", HttpStatus.OK));
-		Mockito.when(restTemplate.getForEntity(findMyIpUrl, String.class)).thenThrow(new UnknownHostException("cannot connect"));
-
-		assertEquals("85.214.132.117", IPLookupUtil.findPublicIP(restTemplate, findMyIpUrl));
-	}
+//	@Test
+//	void findIP2() {
+//		String findMyIpUrl = "https://api.my-ip.io/ip";
+//		Mockito.when(restTemplate.getForEntity(findMyIpUrl, String.class))
+//		.thenReturn(new ResponseEntity<String>("85.214.132.117", HttpStatus.OK));
+//		Mockito.when(restTemplate.getForEntity(findMyIpUrl, String.class)).thenThrow(new UnknownHostException("cannot connect"));
+//
+//		assertEquals("85.214.132.117", IPLookupUtil.findPublicIP(restTemplate, findMyIpUrl));
+//	}
 
 }
