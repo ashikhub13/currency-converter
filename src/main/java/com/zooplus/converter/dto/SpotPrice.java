@@ -10,14 +10,6 @@ public class SpotPrice {
 
 	// Getter Methods
 
-	public String getBase() {
-		return base;
-	}
-
-	public String getCurrency() {
-		return currency;
-	}
-
 	public String getAmount() {
 		return amount;
 	}

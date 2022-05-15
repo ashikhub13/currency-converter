@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Entity
 @Table(name = "crypto_currency")
-public class CryptoCurrency {
+public class Cryptocurrency {
 
 	@Id
 	@Column(name = "id")
