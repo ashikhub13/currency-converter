@@ -12,19 +12,19 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(IPNotFoundException.class)
-	public ResponseEntity<Object> bookNotFoundException(IPNotFoundException exception,
+	public ResponseEntity<Object> ipNotFoundException(IPNotFoundException exception,
 			HttpServletRequest httpServletRequest) {
 		return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
 	}
 
 	@ExceptionHandler(IPMetadataLookupException.class)
-	public ResponseEntity<Object> bookNotFoundWithLongestTitleException(IPMetadataLookupException exception,
+	public ResponseEntity<Object> ipMetadataLookupException(IPMetadataLookupException exception,
 			HttpServletRequest httpServletRequest) {
 		return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
 	}
 
 	@ExceptionHandler(CryptoPriceLookupException.class)
-	public ResponseEntity<Object> borrowListFullException(CryptoPriceLookupException exception,
+	public ResponseEntity<Object> cryptoPriceLookupException(CryptoPriceLookupException exception,
 			HttpServletRequest httpServletRequest) {
 		return new ResponseEntity<Object>(HttpStatus.SERVICE_UNAVAILABLE);
 	}

@@ -1,18 +1,19 @@
 package com.zooplus.converter.controller;
 
-import java.util.List;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.zooplus.converter.entity.CryptoCurrency;
 import com.zooplus.converter.model.CryptoPriceRequest;
 import com.zooplus.converter.service.CurrencyConverterService;
 
-@RestController
+@Controller
 public class CurrencyConverterController {
 
 	@Autowired
@@ -22,19 +23,23 @@ public class CurrencyConverterController {
 	 * Get list of all available cryptocurrencies
 	 */
 	@GetMapping("/crypto")
-	public List<CryptoCurrency> getCryptoCurrencyList() {
-		return currencyConverterService.getAllCryptoCurrencies();
+	public String getCryptoCurrencyList(@ModelAttribute("cryptocurrency") CryptoCurrency cryptocurrency, @ModelAttribute("cryptoPriceRequest") CryptoPriceRequest cryptoPriceRequest, Model model) {
+		model.addAttribute("cryptos", currencyConverterService.getAllCryptoCurrencies());
+		return "converter";
 	}
 
 	/**
-	 * Borrow a book from library by passing the id of a book
+	 * Get localized price of a cryptocurrency
 	 */
 	@PostMapping("/crypto")
-	public String getCryptoCurrencyPrice(@RequestBody CryptoPriceRequest cryptoPriceRequest) {
+	public String getCryptoCurrencyPrice( @Valid CryptoPriceRequest cryptoPriceRequest,  Model model) {
 		String ipAddress = cryptoPriceRequest.getAddress();
 		String cryptoCode = cryptoPriceRequest.getCode();
 		String price = currencyConverterService.getPriceAndCurrency(ipAddress, cryptoCode);
-		return price;
+		model.addAttribute("message", price);
+		model.addAttribute("selectedCrypto", cryptoCode);
+		model.addAttribute("cryptos", currencyConverterService.getAllCryptoCurrencies());
+		return "converter";
 	}
 
 }
