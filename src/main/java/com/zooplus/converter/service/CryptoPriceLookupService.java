@@ -29,7 +29,7 @@ public class CryptoPriceLookupService {
 			String pairPriceUrl = priceUrl.replace("currency_pair", currency_pair);
 			price = PriceLookupUtil.getCryptoPrice(restTemplate, pairPriceUrl);
 		} catch (RestClientException e) {
-			throw new CryptoPriceLookupException();
+			throw new CryptoPriceLookupException("Unable to fetch the price for " + cryptoCode + " in " + curencyCode);
 		}
 		return price;
 	}

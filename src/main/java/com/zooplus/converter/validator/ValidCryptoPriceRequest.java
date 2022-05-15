@@ -10,7 +10,7 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- *Interface class to validate for if ip address passed is valid
+ *Interface class to validate for if IP address passed is valid
  *
  */
 @Constraint(validatedBy = { CryptoPriceRequestValidator.class })
@@ -20,7 +20,7 @@ import javax.validation.Payload;
 @Documented
 public @interface ValidCryptoPriceRequest {
 
-    String message() default "Please enter a correct IP address";
+    String message() default "Please enter a valid IP address";
 
     Class<?>[] groups() default {};
 

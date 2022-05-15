@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Bootstrap Example</title>
+<title>Currency Converter</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -15,7 +15,10 @@
 </head>
 <body>
 	<div class="container" align="center"
-		style="width: 800px; margin: 0 auto;">
+		style="width: 800px; margin: 0 auto;" th:if="${exception == null}">
+		<h1 align="center">
+			<span>Currency Converter</span>
+		</h1>
 		<form action="#" th:action="@{/crypto}"
 			th:object="${cryptoPriceRequest}" method="post">
 
@@ -42,6 +45,9 @@
 	</div>
 	<h1 align="center" th:if="${message != null}">
 		<span>Current unit price is</span> <small th:text="${message}"></small>
+	</h1>
+	<h1 align="center" th:if="${exception != null}">
+		<small th:text="${exception}"></small>
 	</h1>
 </body>
 </html>
