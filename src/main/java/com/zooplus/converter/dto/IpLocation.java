@@ -1,5 +1,8 @@
 package com.zooplus.converter.dto;
 
+/**
+ * DTO for mapping IPLocation from external API *
+ */
 public class IpLocation {
 	private String ip;
 	private String ip_number;
