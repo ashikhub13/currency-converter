@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd
+		http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+		http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.9.xsd">
+	<changeSet author="ashik" id="3">
+		<createTable tableName="country_currency">
+			<column name="country_code" type="VARCHAR(15)">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="country_name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="currency_name" type="VARCHAR(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="currency_code" type="VARCHAR(15)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		<rollback>
+			<dropTable tableName="country_currency" />
+		</rollback>
+	</changeSet>
+	<changeSet author="ashik" id="4">
+		<loadData encoding="UTF-8"
+			file="config/liquibase/changelogs/data/country_code_currency_code_mapping.csv"
+			separator="," quotchar="'" tableName="country_currency" />
+	</changeSet>
+</databaseChangeLog>
