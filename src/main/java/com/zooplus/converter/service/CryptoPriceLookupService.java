@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.zooplus.converter.exception.CryptoPriceLookupException;
 import com.zooplus.converter.repository.CountryCurrencyRepository;
 import com.zooplus.converter.util.PriceLookupUtil;
 
@@ -28,7 +29,7 @@ public class CryptoPriceLookupService {
 			String pairPriceUrl = priceUrl.replace("currency_pair", currency_pair);
 			price = PriceLookupUtil.getCryptoPrice(restTemplate, pairPriceUrl);
 		} catch (RestClientException e) {
-			System.out.println("base-currency exception" + cryptoCode + "-" + curencyCode);
+			throw new CryptoPriceLookupException();
 		}
 		return price;
 	}

@@ -1,5 +1,6 @@
 package com.zooplus.converter.service;
 
+import java.util.Currency;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,8 @@ public class CurrencyConverterService {
 	public String getPriceAndCurrency(String ipAddress, String cryptoCode) {
 		String currencyCode = ipLookupService.getCurrencyCode(ipAddress);
 		String price = cryptoPriceLookupService.getPrice(cryptoCode, currencyCode);
-		java.util.Currency cur1 = java.util.Currency.getInstance(currencyCode);
+		Currency cur1 = Currency.getInstance(currencyCode);
 		String symbol = cur1.getSymbol() != null ? cur1.getSymbol() : currencyCode;
 		return symbol + " " + DecimalFormatUtil.trimDecimals(price);
-
 	}
-
 }

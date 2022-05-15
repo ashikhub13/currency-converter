@@ -9,6 +9,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.zooplus.converter.entity.CountryCurrency;
+import com.zooplus.converter.exception.CountryCurrencyLookupException;
+import com.zooplus.converter.exception.IPMetadataLookupException;
+import com.zooplus.converter.exception.IPNotFoundException;
 import com.zooplus.converter.repository.CountryCurrencyRepository;
 import com.zooplus.converter.util.IPLookupUtil;
 
@@ -32,22 +35,21 @@ public class IPLookupService {
 			try {
 				ipAddress = IPLookupUtil.findPublicIP(restTemplate, findMyIpUrl);
 			} catch (Exception e) {
-				// TODO throw user defined exception
+				throw new IPNotFoundException();
 			}
 		String countryCode = "";
 		try {
 			countryCode = IPLookupUtil.findCountryFromIP(restTemplate, ipAddress, ipLocationUrl);
 		} catch (Exception e) {
-			// TODO throw user defined exception
+			throw new IPMetadataLookupException();
 		}
 		System.out.println("Public IP Location: " + countryCode + "\n");
 		Optional<CountryCurrency> countryCurrency = countryCurrencyRepository.findById(countryCode);
 		if (countryCurrency.isPresent()) {
 			return countryCurrency.get().getCurrencyCode();
 		} else {
-			// TODO throw user defined exception
+			throw new CountryCurrencyLookupException();
 		}
-		return null;
 	}
 
 }

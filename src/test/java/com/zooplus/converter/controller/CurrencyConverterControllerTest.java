@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.zooplus.converter.entity.CryptoCurrency;
+import com.zooplus.converter.model.CryptoPriceRequest;
 import com.zooplus.converter.service.CurrencyConverterService;
 
 @ContextConfiguration
@@ -34,6 +35,15 @@ class CurrencyConverterControllerTest {
 		when(currencyConverterService.getAllCryptoCurrencies()).thenReturn(cryptoCurrencies);
 		List<CryptoCurrency> cryptoCurrenciesActual = currencyConverterController.getCryptoCurrencyList();
 		Assertions.assertEquals(cryptoCurrencies, cryptoCurrenciesActual);
+	}
+
+	@Test
+	void testGetCryptoCurrency() {
+		CryptoPriceRequest CryptoPriceRequest = new CryptoPriceRequest();
+		CryptoPriceRequest.setCode("BTC");
+		when(currencyConverterService.getPriceAndCurrency(null, "BTC")).thenReturn("€ 124.66");
+		String priceActual = currencyConverterController.getCryptoCurrencyPrice(CryptoPriceRequest);
+		Assertions.assertEquals("€ 124.66", priceActual);
 	}
 
 }

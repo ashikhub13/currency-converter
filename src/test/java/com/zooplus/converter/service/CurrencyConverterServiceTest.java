@@ -25,6 +25,12 @@ public class CurrencyConverterServiceTest {
 
 	@InjectMocks
 	CurrencyConverterService currencyConverterService;
+	
+	@Mock
+	IPLookupService ipLookupService;
+	
+	@Mock
+	CryptoPriceLookupService cryptoPriceLookupService;
 
 	@Test
 	void testGetAllCryptoCurrencies() {
@@ -36,4 +42,14 @@ public class CurrencyConverterServiceTest {
 		Assertions.assertEquals(cryptoCurrencies, cryptoCurrenciesActual);
 	}
 
+	@Test
+	void testGetPriceAndCurrency() {
+		String ipAddress = "85.214.132.117";
+		String cryptoCode = "BTC";
+		String price = "124.66";
+		when(ipLookupService.getCurrencyCode(ipAddress)).thenReturn("EUR");
+		when(cryptoPriceLookupService.getPrice("BTC","EUR")).thenReturn(price);
+		String priceActual = currencyConverterService.getPriceAndCurrency(ipAddress, cryptoCode);
+		Assertions.assertEquals("€ 124.66", priceActual);
+	}
 }
