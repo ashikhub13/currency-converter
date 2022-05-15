@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Bootstrap Example</title>
+<title>Currency Converter</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet"
@@ -14,7 +14,11 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-	<div class="container" align="center" style="width:800px; margin:0 auto;" >
+	<div class="container" align="center"
+		style="width: 800px; margin: 0 auto;" th:if="${exception == null}">
+		<h1 align="center">
+			<span>Currency Converter</span>
+		</h1>
 		<form action="#" th:action="@{/crypto}"
 			th:object="${cryptoPriceRequest}" method="post">
 
@@ -26,19 +30,24 @@
 						th:text="${cryptocurrency.name}+' : '+${cryptocurrency.id}"
 						th:selected="${cryptocurrency.id}==${selectedCrypto}"></option>
 				</select>
+				<div class="alert alert-warning"
+					th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></div>
 			</div>
 			<div class="form-group">
-				<input type="text" class="form-control" id="email"
+				<input type="text" class="form-control" id="address"
 					placeholder="IP Address" name="address" th:field="*{address}">
 				<br />
-				<p th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
-					class="alert alert-danger"></p>
+				<div class="alert alert-warning"
+					th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
 			</div>
 			<button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 	</div>
 	<h1 align="center" th:if="${message != null}">
 		<span>Current unit price is</span> <small th:text="${message}"></small>
+	</h1>
+	<h1 align="center" th:if="${exception != null}">
+		<small th:text="${exception}"></small>
 	</h1>
 </body>
 </html>

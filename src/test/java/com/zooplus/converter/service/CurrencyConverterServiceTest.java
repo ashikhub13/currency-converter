@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.zooplus.converter.entity.CryptoCurrency;
+import com.zooplus.converter.entity.Cryptocurrency;
 import com.zooplus.converter.repository.CryptoCurrencyRepository;
 
 @ContextConfiguration
@@ -34,11 +34,11 @@ public class CurrencyConverterServiceTest {
 
 	@Test
 	void testGetAllCryptoCurrencies() {
-		List<CryptoCurrency> cryptoCurrencies = new ArrayList<>();
-		cryptoCurrencies.add(new CryptoCurrency("BTC", "Bitcoin"));
-		cryptoCurrencies.add(new CryptoCurrency("ETH", "Ether"));
+		List<Cryptocurrency> cryptoCurrencies = new ArrayList<>();
+		cryptoCurrencies.add(new Cryptocurrency("BTC", "Bitcoin"));
+		cryptoCurrencies.add(new Cryptocurrency("ETH", "Ether"));
 		when(cryptoCurrencyRepository.findAll()).thenReturn(cryptoCurrencies);
-		List<CryptoCurrency> cryptoCurrenciesActual = currencyConverterService.getAllCryptoCurrencies();
+		List<Cryptocurrency> cryptoCurrenciesActual = currencyConverterService.getAllCryptoCurrencies();
 		Assertions.assertEquals(cryptoCurrencies, cryptoCurrenciesActual);
 	}
 

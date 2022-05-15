@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.zooplus.converter.entity.CryptoCurrency;
+import com.zooplus.converter.entity.Cryptocurrency;
 import com.zooplus.converter.repository.CryptoCurrencyRepository;
 import com.zooplus.converter.util.DecimalFormatUtil;
 
@@ -22,7 +22,7 @@ public class CurrencyConverterService {
 	@Autowired
 	CryptoPriceLookupService cryptoPriceLookupService;
 
-	public List<CryptoCurrency> getAllCryptoCurrencies() {
+	public List<Cryptocurrency> getAllCryptoCurrencies() {
 		return cryptoCurrencyRepository.findAll();
 	}
 

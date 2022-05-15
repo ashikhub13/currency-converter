@@ -30,25 +30,24 @@ public class IPLookupService {
 	@Autowired
 	CountryCurrencyRepository countryCurrencyRepository;
 
-	public String getCurrencyCode(String ipAddress) {
+	public String getCurrencyCode(String ipAddress) throws IPNotFoundException, IPMetadataLookupException, CountryCurrencyLookupException {
 		if (!StringUtils.hasText(ipAddress))
 			try {
 				ipAddress = IPLookupUtil.findPublicIP(restTemplate, findMyIpUrl);
 			} catch (Exception e) {
-				throw new IPNotFoundException();
+				throw new IPNotFoundException("Unable to identify your locale");
 			}
 		String countryCode = "";
 		try {
 			countryCode = IPLookupUtil.findCountryFromIP(restTemplate, ipAddress, ipLocationUrl);
 		} catch (Exception e) {
-			throw new IPMetadataLookupException();
+			throw new IPMetadataLookupException("The locale Information for the IP Address is currently unavailable");
 		}
-		System.out.println("Public IP Location: " + countryCode + "\n");
 		Optional<CountryCurrency> countryCurrency = countryCurrencyRepository.findById(countryCode);
 		if (countryCurrency.isPresent()) {
 			return countryCurrency.get().getCurrencyCode();
 		} else {
-			throw new CountryCurrencyLookupException();
+			throw new CountryCurrencyLookupException("Unable to fetch locale for the IP Address");
 		}
 	}
 

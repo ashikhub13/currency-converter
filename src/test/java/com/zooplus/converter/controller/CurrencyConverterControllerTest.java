@@ -8,8 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,9 +16,9 @@ import org.mockito.Mock;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.Errors;
 
-import com.zooplus.converter.entity.CryptoCurrency;
+import com.zooplus.converter.entity.Cryptocurrency;
 import com.zooplus.converter.model.CryptoPriceRequest;
 import com.zooplus.converter.service.CurrencyConverterService;
 
@@ -36,14 +34,17 @@ class CurrencyConverterControllerTest {
 
 	@Mock
 	private Model model;
+	
+	@Mock
+	private Errors errors;
 
 	@Test
 	void testGetCryptoCurrencyList() {
-		List<CryptoCurrency> cryptoCurrencies = new ArrayList<CryptoCurrency>();
-		cryptoCurrencies.add(new CryptoCurrency("BTC", "Bitcoin"));
-		cryptoCurrencies.add(new CryptoCurrency("ETH", "Ether"));
+		List<Cryptocurrency> cryptoCurrencies = new ArrayList<Cryptocurrency>();
+		cryptoCurrencies.add(new Cryptocurrency("BTC", "Bitcoin"));
+		cryptoCurrencies.add(new Cryptocurrency("ETH", "Ether"));
 		when(currencyConverterService.getAllCryptoCurrencies()).thenReturn(cryptoCurrencies);
-		CryptoCurrency cryptoCurrency = new CryptoCurrency(); 
+		Cryptocurrency cryptoCurrency = new Cryptocurrency(); 
 		CryptoPriceRequest cryptoPriceRequest = new CryptoPriceRequest();
 		String returnValue = currencyConverterController.getCryptoCurrencyList(cryptoCurrency, cryptoPriceRequest, model);
 		verify(model, times(1)).addAttribute("cryptos", cryptoCurrencies);
@@ -51,11 +52,22 @@ class CurrencyConverterControllerTest {
 	}
 
 	@Test
-	void testGetCryptoCurrency() {
+	void testGetCryptoCurrencyWithValidCurrencyAndEmptyIP() {
 		CryptoPriceRequest cryptoPriceRequest = new CryptoPriceRequest();
 		cryptoPriceRequest.setCode("BTC");
 		when(currencyConverterService.getPriceAndCurrency(null, "BTC")).thenReturn("€ 124.66");
-		String returnValue = currencyConverterController.getCryptoCurrencyPrice(cryptoPriceRequest, model);
+		String returnValue = currencyConverterController.getCryptoCurrencyPrice(cryptoPriceRequest, errors, model);
+		verify(model, times(1)).addAttribute("message", "€ 124.66");
+		Assertions.assertEquals("converter", returnValue);
+	}
+	
+	@Test
+	void testGetCryptoCurrencyWithValidCurrencyAndIP() {
+		CryptoPriceRequest cryptoPriceRequest = new CryptoPriceRequest();
+		cryptoPriceRequest.setCode("BTC");
+		cryptoPriceRequest.setAddress("85.214.132.117");
+		when(currencyConverterService.getPriceAndCurrency("85.214.132.117", "BTC")).thenReturn("€ 124.66");
+		String returnValue = currencyConverterController.getCryptoCurrencyPrice(cryptoPriceRequest, errors, model);
 		verify(model, times(1)).addAttribute("message", "€ 124.66");
 		Assertions.assertEquals("converter", returnValue);
 	}
