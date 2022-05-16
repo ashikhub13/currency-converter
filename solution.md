@@ -34,25 +34,78 @@ https://developers.coinbase.com/api/v2#data-endpoints
 I have identified the [Spot price API](https://developers.coinbase.com/api/v2#get-spot-price) from the documentation for our requirement
 Sample Request - curl https://api.coinbase.com/v2/prices/BTC-USD/spot
 
-Sample Response - {
-  "data": {
-    "amount": "1015.00",
-    "currency": "USD"
-  }
-}
+Sample Response - {"data":{"base":"BTC","currency":"USD","amount":"29560.43"}}
 
 I have identified the [Get all currencies API](https://api.pro.coinbase.com/currencies) to identify all the cryptocurrencies we need to choose from the UI for the request. I have mapped all those currencies with type crypto to obtain the list. The application will store this information in database and UI can request for it to populate the list.
 
-
 I have also downloaded and mapped ISO 4217 format for this [link](https://gist.github.com/HarishChaudhari/4680482) which countains all relevant information for us like country code, name, currency code and name. The data looks outdated though will compare and change old references.
 
-All these data will be mapped onto databse through the a csv file which I intend to achieve through liquibase migration
+All these data will be mapped onto database through the a csv file which I intend to achieve through liquibase migration.
 
 ### Database
 
-Data storage is achieved through the h2 database which integrated along with Liquibase allows easy data migration. Application will lookup two tables one containing country-currency mapping and other containing cryptocurrency list.
+Data storage is achieved through the h2 database which integrated along with Liquibase allows easy data migration. Application will lookup two tables one containing country-currency mapping and other containing cryptocurrency list. 2 database files referenced from h2 will be created in the host system to store the country level information as well as cryptocurrency list. The h2 database is file based and will be available on the host system with files prefixed with 'currency-converter-dev'.
+If any errors come due to databasechangelog, which is not so probable, please find and delete the files prefixed with 'currency-converter-dev' and restart application
+
+### How to Run
+
+* Go into the project root folder run
+* mvn clean
+* mvn spring-boot:run
+
+To create an executable JAR - mvn package (available inside target folder)
+
+Also you can import this as a maven project in eclipse and run. (Needs lombok configured for eclipse)
+
+Default port for the application is **8080** by default.
+
+Please note Java version used is 11
+If not for over engineering would have created a container and setup a build using it.
+
+Application can be loaded at localhost:8080/crypto
 
 
+### API Documentation summary
 
+* Basically designed 4 APIs.
+1 Get available cryptocurrencies list - GET - localhost:8080/crypto
+2 Return localized price information of a cryptocurrency - POST - localhost:8080/crypto
+
+{
+    "address": "85.214.132.117",
+    "code": "SHIB"
+}
+
+### Thymeleaf
+
+I have used Thymeleaf to integrate the UI with the backend APIs. I have used the most straightforward UI design to represent the functionality. I believe there is still scope of improvement there.
+
+### TODO 
+
+As I could focus on development activities mainly only over the weekend, there are a lot of improvements I wanted to to do, but could not make it in the raised PR. Some of the items listed are :
+
+1. Cover exceptions in unit test
+   I have caught many custom exceptions on various cases, mainly dealing with public APIs. If I get time, will get them covered too.
+2. Dockerizing the application
+   Initially I had the plan to dockerize the application, but wanted to do that at the end.
+3. Moving items like exception strings, decimal places count to application properties
+   Wanted to bring flexibility to the application to update items that are predetermined to application properties.
+4.  Improving API performance
+   While integrating thymeleaf, price request submit forces the fetch all cryptocurrency query to run again and load the data into the model. I     could not spend too much time removing that dependency. Wanted to explore different way to load the page without refreshing or just change the   message value only. Angular or use of javascript could have fixed this butuploaded could not get time to explore. Also since we are calling same data again, wanted to try caching, but since this is a simple application, decided not to.
+5. Currency symbol Implementation
+  Also I have used the java util Currency class to determine the symbol. Wanted to fetch all the currency symbols with respect to the currency codes in the database and map it across the same. But needed more time fetching that information
+6. Updating latest currency data
+  As I have mentioned I have used a csv sheet to upload the currency and country data. This data is obsolete and needs some updation. For example Malta and Cyprus. I removed these from the sheet now. So tracking their localised price will throw a custom error. I wish to update them when I get time.
+7. Using slf4j to log important aspects in the application
+   I had used sysouts temporarily to monitor the values in runtime. Wanted to replace it all with log information, but could not get time.
+8. Rounding logic
+   How to round the decimals is a one aspect I wanted to do it more accurately. Since problem statement did not define what exactly is the correct decimal places. Did not explore more on it. But I believe whatever change on that end can easily be udpated.
+  
+### Possible issues and data concerns
+1. Since we are dealing with 3rd party public APIs there can be issues that we cannot expect, I have tried to catch all these, still I believe there are lots of other cases yet to be found and mapped properly with appropriate error messages.
+For example, following API sometime does not return correct response even though XRP is a valid cryptocurrency. I decided to explore why this is occurring in detail later :
+
+curl https://api.coinbase.com/v2/prices/XRP-USD/spot
+{"errors":[{"id":"not_found","message":"Invalid base currency"}]}
 
 
