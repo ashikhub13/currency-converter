@@ -53,6 +53,11 @@ If any errors come due to databasechangelog, which is not so probable, please fi
 * mvn clean
 * mvn spring-boot:run
 
+If PR is such that it is not merged to main branch. Please do the following before the mvn commands:
+
+1. git fetch origin currency_converter_main
+2. git checkout currency_converter_main
+
 To create an executable JAR - mvn package (available inside target folder)
 
 Also you can import this as a maven project in eclipse and run. (Needs lombok configured for eclipse)
