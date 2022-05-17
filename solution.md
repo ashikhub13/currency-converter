@@ -15,7 +15,7 @@ From a user perspective, first use case is to list all cryptocurrencies availabl
    - Storing the data in db and retreiving it. I am going ahead with this approach since I am comfortable with databases and providing an API to retreive the cryptocurrency list.
  
  
-Once the use selects a currency, he has the option to provide an Ip address which can be used to map the locale (country) to obtain the local currency. But this is an optional field. So a user can send a request to find the rate without sending an IP address. In that case, the application has to determine the IP address through which it communicates to the internet. For this use case, I plan on hitting a url which can retreive us back our IP address, which then could be used as a locale reference.
+Once the user selects a currency, he has the option to provide an Ip address which can be used to map the locale (country) to obtain the local currency. But this is an optional field. So a user can send a request to find the rate without sending an IP address. In that case, the application has to determine the IP address through which it communicates to the internet. For this use case, I plan on hitting a url which can retreive us back our IP address, which then could be used as a locale reference.
 
 The next part is to find the country/locale to which the IP address is being used. This can be done in two ways
 
@@ -93,7 +93,7 @@ As I could focus on development activities mainly only over the weekend, there a
 4.  Improving API performance
    While integrating thymeleaf, price request submit forces the fetch all cryptocurrency query to run again and load the data into the model. I     could not spend too much time removing that dependency. Wanted to explore different way to load the page without refreshing or just change the   message value only. Angular or use of javascript could have fixed this butuploaded could not get time to explore. Also since we are calling same data again, wanted to try caching, but since this is a simple application, decided not to.
 5. Currency symbol Implementation
-  Also I have used the java util Currency class to determine the symbol. Wanted to fetch all the currency symbols with respect to the currency codes in the database and map it across the same. But needed more time fetching that information
+  Also I have used the java util Currency class to determine the symbol. Wanted to fetch all the currency symbols with respect to the currency codes in the database and map it across the same. But needed more time fetching that information. Currently if no symbol available in util currency code is appended instead
 6. Updating latest currency data
   As I have mentioned I have used a csv sheet to upload the currency and country data. This data is obsolete and needs some updation. For example Malta and Cyprus. I removed these from the sheet now. So tracking their localised price will throw a custom error. I wish to update them when I get time.
 7. Using slf4j to log important aspects in the application
@@ -107,5 +107,9 @@ For example, following API sometime does not return correct response even though
 
 curl https://api.coinbase.com/v2/prices/XRP-USD/spot
 {"errors":[{"id":"not_found","message":"Invalid base currency"}]}
+
+### Coverage
+
+ Test coverage is currently at 82%. Most of them are entity and config classes.
 
 

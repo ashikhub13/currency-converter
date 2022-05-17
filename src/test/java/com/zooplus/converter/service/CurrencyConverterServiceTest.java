@@ -14,6 +14,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.zooplus.converter.entity.Cryptocurrency;
+import com.zooplus.converter.exception.CountryCurrencyLookupException;
+import com.zooplus.converter.exception.IPMetadataLookupException;
+import com.zooplus.converter.exception.IPNotFoundException;
 import com.zooplus.converter.repository.CryptoCurrencyRepository;
 
 @ContextConfiguration
@@ -25,10 +28,10 @@ public class CurrencyConverterServiceTest {
 
 	@InjectMocks
 	CurrencyConverterService currencyConverterService;
-	
+
 	@Mock
 	IPLookupService ipLookupService;
-	
+
 	@Mock
 	CryptoPriceLookupService cryptoPriceLookupService;
 
@@ -48,8 +51,42 @@ public class CurrencyConverterServiceTest {
 		String cryptoCode = "BTC";
 		String price = "124.66";
 		when(ipLookupService.getCurrencyCode(ipAddress)).thenReturn("EUR");
-		when(cryptoPriceLookupService.getPrice("BTC","EUR")).thenReturn(price);
+		when(cryptoPriceLookupService.getPrice("BTC", "EUR")).thenReturn(price);
 		String priceActual = currencyConverterService.getPriceAndCurrency(ipAddress, cryptoCode);
 		Assertions.assertEquals("€ 124.66", priceActual);
+	}
+
+	@Test
+	void testGetPriceAndCurrency_expect_IPNotFoundException() {
+		String ipAddress = "85.214.132.117";
+		String cryptoCode = "BTC";
+		when(ipLookupService.getCurrencyCode(ipAddress)).thenReturn("EUR");
+		when(cryptoPriceLookupService.getPrice("BTC", "EUR")).thenThrow(IPNotFoundException.class);
+		Assertions.assertThrows(IPNotFoundException.class, () -> {
+			currencyConverterService.getPriceAndCurrency(ipAddress, cryptoCode);
+		});
+	}
+
+	@Test
+	void testGetPriceAndCurrency_expect_IPMetadataLookupException() {
+		String ipAddress = "85.214.132.117";
+		String cryptoCode = "BTC";
+		String price = "124.66";
+		when(ipLookupService.getCurrencyCode(ipAddress)).thenReturn("EUR");
+		when(cryptoPriceLookupService.getPrice("BTC", "EUR")).thenThrow(IPMetadataLookupException.class);
+		Assertions.assertThrows(IPMetadataLookupException.class, () -> {
+			currencyConverterService.getPriceAndCurrency(ipAddress, cryptoCode);
+		});
+	}
+
+	@Test
+	void testGetPriceAndCurrency_expect_CountryCurrencyLookupException() {
+		String ipAddress = "85.214.132.117";
+		String cryptoCode = "BTC";
+		when(ipLookupService.getCurrencyCode(ipAddress)).thenReturn("EUR");
+		when(cryptoPriceLookupService.getPrice("BTC", "EUR")).thenThrow(CountryCurrencyLookupException.class);
+		Assertions.assertThrows(CountryCurrencyLookupException.class, () -> {
+			currencyConverterService.getPriceAndCurrency(ipAddress, cryptoCode);
+		});
 	}
 }
